@@ -1,0 +1,119 @@
+$theme.sctable-column-header-view {
+    border-top: none !important;
+    
+    & > .col-name {
+        padding-top: 1px;
+    }
+}
+
+$theme.sc-tab-view > .sc-container-view > .sc-view > .well > .sc-view > .label {
+    line-height: 18px;
+}
+
+
+
+$theme.sc-tab-view .sc-text-field-view {
+    background: #d7e3ef;
+
+    &.focus > .border {
+        display: none;
+    }
+
+    &.error {
+        /*background: #d893a1;*/
+        /*background: #fbe6f2;*/
+        background: #ffbbbb static_url('images/warning_14x14.png') no-repeat 98.5% center;
+
+        & > .border {
+            border: 2px solid #f00;
+        }
+        
+        & > .padding {
+            margin-right: 18px;
+        }
+    }
+
+    
+    & > .border {
+        border: 1px solid #aaa;
+        border-bottom-color: white;
+        border-right-color: white;
+        -webkit-appearance: inherit;
+    }
+}
+
+
+
+$theme.mailAlias {
+    border: 1px solid #aaa;
+}
+
+$theme.mailAlias .sc-list-view {
+    background-color: #d7e3ef;
+
+    &.error {
+        background: #ffbbbb;
+
+        & > .border {
+            border: 2px solid #f00;
+        }
+        
+        & > .padding {
+            margin-right: 18px;
+        }
+    }
+}
+
+
+$theme.sc-list-item-view {
+    &.error {
+        background: static_url('images/warning_14x14.png') no-repeat 98.5% center;
+    }
+
+    &.sel {
+        background-color: #9abcd8;
+    }
+}
+
+$theme.list-toolbar {
+    border-top: 1px solid #aaa;
+    background: transparent static_url('images/table/header-bg.png') repeat-x top right;
+
+    & > .image-button {
+        border-right: 1px solid #aaa;
+        background: transparent static_url('images/table/header-bg.png') repeat-x top right;
+
+        &.active {
+            background-position: bottom left;
+        }
+
+        & > div.img {
+            height: 100%;
+            background-color: transparent;
+            background-repeat: no-repeat;
+            background-position: center center;
+
+            &.list-toolbar-add    { background-image: static_url('images/list/add-icon.png');    }
+            &.list-toolbar-remove { background-image: static_url('images/list/remove-icon.png'); }
+        }
+    }
+}
+
+
+$theme.sc-picker.error-message {
+    margin-top: 20px;
+    -webkit-border-radius: 7px;
+    border: 0px solid red;
+    background: #404040 static_url('images/error_32x32.png') no-repeat 5px 5px;
+
+    & > .sc-pointer {
+        background: transparent static_url('images/tooltip-pointer.png') no-repeat top right;
+        top: 13px;
+    }
+
+    & > .sc-label-view {
+        background-color: transparent;
+        color: white;
+        padding: 5px 5px 5px 42px;
+    }
+}

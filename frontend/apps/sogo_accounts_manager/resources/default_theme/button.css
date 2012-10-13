@@ -1,0 +1,133 @@
+/*******************************************
+ * Buttons
+ */
+
+$theme.button {
+    $button_height: 23px;
+
+    max-height: $button_height;
+
+    &.def {
+        font-weight: bold;
+    }
+
+    & > label {
+        height: 100%;
+        line-height: $button_height;
+        padding: 0 10px 0 9px;
+    }
+    &.no-padding > label { padding: 0; }
+
+    & > .left {
+        position: absolute;
+        left: 0px;
+        right: 2px;
+
+        width: auto;
+        height: 100%;
+        background: transparent static_url('images/button/button.png') no-repeat;
+    }
+
+    &.active > .left {
+        background-position: bottom left;
+    }
+
+    & > .right {
+        position: absolute;
+        left: auto;
+        right: 0px;
+
+        width: 2px;
+        height: 100%;
+        background: transparent static_url('images/button/button-right.png') no-repeat top right;
+    }
+}
+
+
+/*******************************************
+ * Toolbar buttons
+ */
+
+$theme.toolbar $theme.button {
+    max-height: none;
+    background: transparent;
+
+    & > label {
+        line-height: 13px;
+        padding: 0;
+
+        font-size: 11px;
+        
+        & > img {
+            position: static;
+            display: block;
+            margin: 6px auto 3px auto;
+        }
+    }
+
+    & > .left,
+    & > .right {
+        background: none;
+    }
+
+    &:hover {
+        & > .left {
+            background: transparent static_url('images/toolbar/button-hover.png') no-repeat;
+        }
+
+        &.active > .left {
+            background-position: bottom left;
+        }
+        
+        & > .right {
+            background: transparent static_url('images/toolbar/button-hover-right.png') no-repeat scroll top right;
+        }
+    }
+
+}
+
+/*******************************************
+ * Module switcher buttons
+ */
+
+$theme.toolbar.modulebar $theme.button {
+    & > label {
+        font-size: 12px;
+        color: #ddd;
+
+        /* TODO: no magic value (valign ?) */
+        line-height: 30px;
+        padding: 0;
+    }
+
+    & > .left,
+    & > .right {
+        display: none;
+    }
+
+    /* override standard toolbar */
+    &:hover > label {
+        background: #666;
+        cursor: pointer;
+    }
+
+    &.running-module {
+        border-top: 2px solid #afafff;
+
+        & > label {
+            position: relative;
+            top: -2px;
+            font-weight: bold;
+        }
+
+        &:hover > label {
+            background: transparent;
+            cursor: default;
+        }
+    }
+
+    &.exitButton {
+        left: auto !important;
+        right: 0;
+    }
+}

@@ -1,0 +1,58 @@
+/*******************************************
+ * Table
+ * (override standard sctable CSS)
+ */
+
+$theme.sctable-table-view {
+    background: #fff;
+
+    & .sctable-header-scroll-view {
+        background: transparent static_url('images/table/header-bg.png') repeat-x top right;
+        border-bottom: 1px solid #aaa;
+
+        & .sctable-column-header-view {
+            background: transparent;
+            border-left: 1px solid #aaa;
+            border-right: 1px solid #aaa;
+    
+            &.col-0 {
+                border-left: none;
+            }
+    
+            & > .col-name {
+                line-height: 20px;
+                margin: 0 0 0 3px;
+            }
+    
+            & > .sort-indicator {
+                height: 100%;
+                top: 0;
+                right: 4px;
+    
+                &.asc {
+                    background: static_url('images/table/arrow-up.png') no-repeat center center;
+                }
+    
+                &.desc {
+                    background: static_url('images/table/arrow-down.png') no-repeat center center;
+                }
+            }
+    
+            & > .resize-handle {
+                top: 0;
+                width: 4px;
+                height: 100%;
+                background: none;
+            }
+        }
+    }
+
+    & .sctable-body-scroll-view {
+        top: 23px !important;
+
+        & .sctable-row-view.sel {
+            background-color: #9abcd8;
+            color: #fff !important;
+        }
+    }
+}

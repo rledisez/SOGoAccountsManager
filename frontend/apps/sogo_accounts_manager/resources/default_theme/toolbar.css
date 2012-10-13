@@ -1,0 +1,15 @@
+/*******************************************
+ * Toolbar
+ */
+
+$theme.toolbar {
+    border-bottom: 1px solid #aaa;
+
+    /*
+     * Module switcher
+     */
+    &.modulebar {
+        background: #000;
+        border: none;
+    }
+}

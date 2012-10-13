@@ -1,0 +1,10 @@
+--- SOGo/Templates/UIxPageFrame.wox.orig	2012-10-10 21:25:49.000000000 +0200
++++ SOGo/Templates/UIxPageFrame.wox	2012-10-13 09:26:12.230353591 +0200
+@@ -111,6 +111,7 @@
+ 		  <a id="administrationBannerLink" var:href="relativeAdministrationPath"
+ 		    ><var:string label:value="Administration" /></a>
+ 		</var:if>
++		<a id="accountsmanagerBannerLink" href="/SOGo/AccountsManager"><var:string label:value="Accounts Manager" /></a>
+ 	      </var:if>
+ 	      <var:if condition="isUIxDebugEnabled"
+ 		> <a id="consoleBannerLink"

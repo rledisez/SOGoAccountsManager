@@ -1,0 +1,13 @@
+BODY {
+    font-family: 'Lucida Grande', 'Bitstream VeraSans', Tahoma, sans-serif;
+    font-size: 8pt;
+    background-color: #e6e7e6;
+}
+
+$theme.text-align-left   { text-align: left;   }
+$theme.text-align-center { text-align: center; }
+$theme.text-align-right  { text-align: right;  }
+
+$theme.sc-regular-size {
+    /*font-size: 8px;*/
+}

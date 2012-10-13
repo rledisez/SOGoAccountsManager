@@ -1,0 +1,30 @@
+/*******************************************
+ * Well
+ */
+
+$theme.well {
+    border: 1px solid #aaa;
+    
+    & .well-label {
+        z-index: 1;
+        background: #eaeaea;
+    }
+}
+
+/* TABS */
+$theme.sc-tab-view > .sc-container-view {
+    top: 23px !important;
+    
+    /* Section inside tab */
+    & > .sc-view > .well {
+        border-bottom-color: #fff;
+        border-right-color: #fff;
+        
+        & > .sc-view {
+            top: 11px !important;
+            bottom: 11px !important;
+            left: 11px !important;
+            right: 11px !important;
+        }
+    }
+}

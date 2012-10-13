@@ -1,0 +1,53 @@
+/*******************************************
+ * Segment (tabs)
+ */
+
+$theme.segmented {
+    text-align: left !important;
+    margin-left: 5px;
+    
+    & > .segment {
+        text-shadow: none;
+        border: none;
+        background: transparent;
+
+        padding: 0;
+        height: 24px;
+
+        & > .left {
+            position: absolute;
+            left: 0px;
+            right: 2px;
+
+            width: auto;
+            height: 100%;
+            background: transparent static_url('tab-inactive.png') no-repeat;
+        }
+
+        &.sel > .left {
+            background: transparent static_url('tab-active.png') no-repeat;
+        }
+
+        & > .right {
+            position: absolute;
+            left: auto;
+            right: 0px;
+
+            width: 2px;
+            height: 100%;
+            background: transparent static_url('tab-inactive-right.png') no-repeat scroll top right;
+        }
+
+        &.sel > .right {
+            background: transparent static_url('tab-active-right.png') no-repeat scroll top right;
+        }
+
+        & > label {
+            position: relative;
+            z-index: 1;
+
+            line-height: 26px;
+            padding: 0px 5px;
+        }
+    }
+}
