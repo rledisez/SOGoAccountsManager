@@ -40,7 +40,9 @@ return array(
     /**
      * SOGo parameters
      */
-    'sogo.db.dsn' => 'pgsql:host=/tmp;dbname=sogo;user=sogo;password=password',
+    'sogo.db.dsn' => 'pgsql:host=/tmp;dbname=sogo',
+    'sogo.db.user' => 'sogo',
+    'sogo.db.password' => 'password',
     'sogo.db.OCSSessionsFolder' => 'sogo_sessions_folder',
 
     /**

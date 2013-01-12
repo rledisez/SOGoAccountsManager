@@ -100,7 +100,8 @@ class SOGoSession extends \Slim\Middleware {
     private function _valueForSessionKey($sessionKey)
     {
         $value = null;
-        $dbh = new PDO($this->app->config('sogo.db.dsn'));
+        $dbh = new PDO($this->app->config('sogo.db.dsn'),
+                $this->app->config('sogo.db.user'), $this->app->config('sogo.db.password'));
 
         $sql = 'SELECT c_value
                 FROM '.$this->app->config('sogo.db.OCSSessionsFolder').'
