@@ -24,8 +24,6 @@ return array(
     /**
      * SOGoAccountsManager parameters
      */
-    'sessionTimeout' => 20000000, // minutes
-
     'informationsStore.namespace' => '\Generic\SOGoMut',
     'informationsStore.params.ldap' => array(
         'host'              => '127.0.0.1',

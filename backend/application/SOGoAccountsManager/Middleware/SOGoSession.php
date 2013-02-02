@@ -105,9 +105,8 @@ class SOGoSession extends \Slim\Middleware {
 
         $sql = 'SELECT c_value
                 FROM '.$this->app->config('sogo.db.OCSSessionsFolder').'
-                WHERE c_id = ?
-                  AND c_lastseen > ?';
-        $args = array($sessionKey, time() - (int)$this->app->config('sessionTimeout')*60);
+                WHERE c_id = ?';
+        $args = array($sessionKey);
 
         $sth = $dbh->prepare($sql);
         if( $sth->execute($args) && ($result = $sth->fetch(PDO::FETCH_OBJ)) ) {
