@@ -59,12 +59,15 @@ SOGoAccountsManager.AccountsApplicationState = SC.State.design({
                     result = SOGoAccountsManager.store.find(SOGoAccountsManager.Account.QUERY);
                     SOGoAccountsManager.accountsController.set('content', result);
 
-                } else /*if( context && context.refresh )*/ {
+                } else if( context && context.refresh ) {
                     console.debug('SOGoAccountsManager.AccountsApplicationState.loadDataState.loadingDataState.enterState(): refreshing data');
 
                     accountsStoreKeys = SOGoAccountsManager.store.storeKeysFor(SOGoAccountsManager.Account);
                     SOGoAccountsManager.store.unloadRecords(null, null, accountsStoreKeys);
                     SOGoAccountsManager.accountsController.get('content').refresh();
+
+                } else {
+                    this.gotoState('readyState');
                 }
 
                 console.debug('SOGoAccountsManager.AccountsApplicationState.loadDataState.loadingDataState.enterState(): exit');
