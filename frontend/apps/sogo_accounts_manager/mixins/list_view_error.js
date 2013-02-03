@@ -36,7 +36,7 @@ SOGoAccountsManager.ListViewError = {
      */
     reloadIfNeeded: function() {
         sc_super();
-        this.invokeLater('_errorMessageDidChange');
+        this.invokeLast('_errorMessageDidChange');
     },
 
     /**

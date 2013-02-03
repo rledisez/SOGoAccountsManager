@@ -58,8 +58,8 @@ SOGoAccountsManager.ListItemErrorView = SC.ListItemView.extend({
         if( !this.get('isVisibleInWindow') ) {
             this._errorMessagePane.remove();
         } else {
-            // invokeLater, so the item is positioned before the PickerPane is displayed
-            this.invokeLater('isSelectedDidChange');
+            // invokeLast, so the item is positioned before the PickerPane is displayed
+            this.invokeLast('isSelectedDidChange');
         }
     }.observes('isVisibleInWindow'),
 

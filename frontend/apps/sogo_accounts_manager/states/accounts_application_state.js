@@ -222,7 +222,7 @@ SOGoAccountsManager.AccountsApplicationState = SC.State.design({
                 var editedItem = SOGoAccountsManager.accountsController.get('editedItem');
                 editedItem.get('mailAliasController').addObject(obj)
                 editedItem.get('mailAliasController').selectObject(obj);
-                SOGoAccountsManager.getPath('accountsApplicationPage.editPane.optionsTab.aliases.contentView.aliasesList.contentView').invokeLater('insertNewline');
+                SOGoAccountsManager.getPath('accountsApplicationPage.editPane.optionsTab.aliases.contentView.aliasesList.contentView').invokeLast('insertNewline');
             },
 
             removeAlias: function() {
