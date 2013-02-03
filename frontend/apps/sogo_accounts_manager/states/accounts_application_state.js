@@ -69,38 +69,38 @@ SOGoAccountsManager.AccountsApplicationState = SC.State.design({
 
                 console.debug('SOGoAccountsManager.AccountsApplicationState.loadDataState.loadingDataState.enterState(): exit');
             },
+
+            statusDidChange: function(target, key) {
+                console.debug('SOGoAccountsManager.AccountsApplicationState.loadDataState.statusDidChange(): enter');
+
+                var status = target.get(key);
+                console.debug('SOGoAccountsManager.AccountsApplicationState.loadDataState.statusDidChange(): status=%d', status);
+
+                if( status & SC.Record.BUSY ) {
+                    // Nop
+
+                } else if( status & SC.Record.READY ) {
+                    this.gotoState('readyState');
+
+                } else if( status & SC.Record.ERROR ) {
+                    this.gotoState('errorLoadingState');
+                }
+
+                console.debug('SOGoAccountsManager.AccountsApplicationState.loadDataState.statusDidChange(): exit');
+            }.stateObserves('SOGoAccountsManager.accountsController.status'),
         }),
-
-        statusDidChange: function(target, key) {
-            console.debug('SOGoAccountsManager.AccountsApplicationState.loadDataState.statusDidChange(): enter');
-
-            var status = target.get(key);
-            console.debug('SOGoAccountsManager.AccountsApplicationState.loadDataState.statusDidChange(): status=%d', status);
-
-            if( status & SC.Record.BUSY ) {
-                // Nop
-
-            } else if( status & SC.Record.READY ) {
-                this.gotoState('readyState');
-
-            } else if( status & SC.Record.ERROR ) {
-                this.gotoState('errorLoadingState');
-            }
-
-            console.debug('SOGoAccountsManager.AccountsApplicationState.loadDataState.statusDidChange(): exit');
-        }.stateObserves('SOGoAccountsManager.accountsController.status'),
 
         errorLoadingState: SC.State.design({
             enterState: function(context) {
                 var response = SOGoAccountsManager.store.readQueryError(SOGoAccountsManager.Account.QUERY);
                 var xhr = response.rawRequest;
                 var errors = response.get('body');
-                
+
                 if( !errors             ) { errors = {};                      }
                 if( !errors.message     ) { errors.message = "Unknown error"; }
                 if( !errors.description ) { errors.description = '';          }
                 if( !errors.args        ) { errors.args = {};                 }
-                    
+
                 SC.AlertPane.error({
                     message: errors.message.loc(),
                     description: errors.description.loc(),
@@ -199,7 +199,7 @@ SOGoAccountsManager.AccountsApplicationState = SC.State.design({
                 console.debug('SOGoAccountsManager.AccountsApplicationState.editState.editingState.cancel(): enter');
 
                 var editedItem = SOGoAccountsManager.accountsController.get('editedItem');
-                
+
                 if( editedItem.get('status') === SC.Record.READY_NEW ) {
                     console.debug('SOGoAccountsManager.AccountsApplicationState.editState.editingState.cancel(): READY_NEW -> unloadRecord()');
                     SOGoAccountsManager.store.unloadRecord(null, null, editedItem.storeKey);
@@ -272,11 +272,11 @@ SOGoAccountsManager.AccountsApplicationState = SC.State.design({
                 var response = SOGoAccountsManager.store.readError(editedItem.storeKey);
                 var xhr = response.rawRequest;
                 var errors = response.get('body');
-                
+
                 if( !errors.message     ) { errors.message = "Unknown error"; }
                 if( !errors.description ) { errors.description = '';          }
                 if( !errors.args )        { errors.args = {};                 }
-                    
+
                 SC.AlertPane.error({
                     message: errors.message.loc(),
                     description: errors.description.loc(),
