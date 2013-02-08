@@ -20,16 +20,16 @@
  */
 
 SOGoAccountsManager.main = function main() {
-    // Initialize statechart
-    var statechart = SOGoAccountsManager.statechart;
-    SC.RootResponder.responder.set('defaultResponder', statechart); 
-    statechart.initStatechart();
-
     // Logging level
     if( SOGoAccountsManager.logging_level < 4 ) console.debug = function() {};
     if( SOGoAccountsManager.logging_level < 3 ) console.info = console.log = function() {};
     if( SOGoAccountsManager.logging_level < 2 ) console.warn = function() {};
     if( SOGoAccountsManager.logging_level < 1 ) console.error = function() {};
+
+    // Initialize statechart
+    var statechart = SOGoAccountsManager.statechart;
+    SC.RootResponder.responder.set('defaultResponder', statechart);
+    statechart.initStatechart();
 };
 
 function main() { SOGoAccountsManager.main(); }
