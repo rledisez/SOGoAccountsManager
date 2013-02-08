@@ -144,19 +144,7 @@ SOGoAccountsManager.AccountsApplicationState = SC.State.design({
         },
 
         deleteAccount: function() {
-            if( SOGoAccountsManager.accountsController.get('selection').length() < 1 ) {
-                SC.AlertPane.error({
-                    message: "Accounts deletion".loc(),
-                    description: "You must select one or more accounts to delete.".loc(),
-                    buttons: [
-                        {
-                            title: "Close".loc(),
-                        }
-                    ]
-                });
-            } else {
-                this.gotoState('deleteState');
-            }
+            this.gotoState('deleteSelectionState');
         },
 
         reloadList: function() {
@@ -305,22 +293,37 @@ SOGoAccountsManager.AccountsApplicationState = SC.State.design({
 
     }),
 
-    deleteState: SC.State.design({
+    deleteSelectionState: SC.State.design({
         enterState: function() {
-            SC.AlertPane.warn({
-                message: "Delete accounts".loc(),
-                description: "Are you sure you want to delete the selected account?".loc(),
-                buttons: [
-                    {
-                        title: "Delete".loc(),
-                        action: 'confirmDelete',
-                    },
-                    {
-                        title: "Cancel".loc(),
-                        action: 'cancelDelete',
-                    }
-                ]
-            });
+            if( SOGoAccountsManager.accountsController.get('selection').length() < 1 ) {
+                SC.AlertPane.error({
+                    message: "Accounts deletion".loc(),
+                    description: "You must select one or more accounts to delete.".loc(),
+                    buttons: [
+                        {
+                            title: "Close".loc(),
+                        }
+                    ]
+                });
+
+                this.gotoState('readyState');
+
+            } else {
+                SC.AlertPane.warn({
+                    message: "Delete accounts".loc(),
+                    description: "Are you sure you want to delete the selected account?".loc(),
+                    buttons: [
+                        {
+                            title: "Delete".loc(),
+                            action: 'confirmDelete',
+                        },
+                        {
+                            title: "Cancel".loc(),
+                            action: 'cancelDelete',
+                        }
+                    ]
+                });
+            }
         },
 
         confirmDelete: function() {
