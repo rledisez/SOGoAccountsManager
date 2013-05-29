@@ -42,17 +42,6 @@ $app->add(new \SOGoAccountsManager\Middleware\SOGoConfiguration());
 $app->add(new \SOGoAccountsManager\Middleware\JsonExceptions());
 
 
-// Error handler
-$app->error( function(Exception $e) use($app) {
-    $code = ( $e->getCode() !== 0 )
-        ? $e->getCode()
-        : 500;
-
-    $app->response()->status($code);
-    $app->response()->body($e->getMessage());
-});
-
-
 $app->get('/checkAuth', function () use($app) {
     $className = '\SOGoAccountsManager\Authentication';
     $auth = new $className($app);
