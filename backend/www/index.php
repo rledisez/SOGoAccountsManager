@@ -39,6 +39,7 @@ $app->config( include 'config.php' );
 $app->add(new \Slim\Middleware\ContentTypes());
 $app->add(new \SOGoAccountsManager\Middleware\SOGoSession());
 $app->add(new \SOGoAccountsManager\Middleware\SOGoConfiguration());
+$app->add(new \SOGoAccountsManager\Middleware\JsonExceptions());
 
 
 // Error handler
