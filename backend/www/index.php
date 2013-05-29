@@ -36,8 +36,9 @@ $zendAutoloader->register();
 
 $app = new \Slim\Slim();
 $app->config( include 'config.php' );
-$app->add(new \SOGoAccountsManager\Middleware\SOGoSession());
 $app->add(new \Slim\Middleware\ContentTypes());
+$app->add(new \SOGoAccountsManager\Middleware\SOGoSession());
+$app->add(new \SOGoAccountsManager\Middleware\SOGoConfiguration());
 
 
 // Error handler

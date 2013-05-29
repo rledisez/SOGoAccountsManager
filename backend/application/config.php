@@ -2,7 +2,7 @@
 /**
  * SOGoAccountsManager - a web-based users accounts manager which
  *                       integrates well with SOGo
- * Copyright (c) 2011-2012 Romain LE DISEZ
+ * Copyright (c) 2011-2013 Romain LE DISEZ
  *
  * This file is part of SOGoAccountsManager.
  *
@@ -38,10 +38,11 @@ return array(
     /**
      * SOGo parameters
      */
-    'sogo.db.dsn' => 'pgsql:host=/tmp;dbname=sogo',
-    'sogo.db.user' => 'sogo',
-    'sogo.db.password' => 'password',
-    'sogo.db.OCSSessionsFolder' => 'sogo_sessions_folder',
+    //'sogo.sysconfig_file'  => '/etc/sogo/sogo.conf',
+    //'sogo.userconfig_file' => '/var/lib/sogo/GNUstep/Defaults/.GNUstepDefaults',
+    //'sogo.config' => (object)array(
+    //    'SOGoProfileURL' => 'toto',
+    //),
 
     /**
      * Slim parameters
