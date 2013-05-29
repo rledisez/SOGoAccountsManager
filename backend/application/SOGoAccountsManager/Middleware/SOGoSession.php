@@ -2,7 +2,7 @@
 /**
  * SOGoAccountsManager - a web-based users accounts manager which
  *                       integrates well with SOGo
- * Copyright (c) 2011-2012 Romain LE DISEZ
+ * Copyright (c) 2011-2013 Romain LE DISEZ
  *
  * This file is part of SOGoAccountsManager.
  *
@@ -23,34 +23,14 @@
 namespace SOGoAccountsManager\Middleware;
 
 use Exception;
-use PDO;
+use \SOGoAccountsManager\Utils\PDO;
+use \SOGoAccountsManager\Exception\UserFriendlyException;
 
-class SOGoSession extends \Slim\Middleware {
-    /**
-     * Call
-     * @return void
-     */
-    public function call() {
-        $username = false;
-        $password = false;
-
-        try {
-            list($username, $password) = $this->_getSOGoCredentials();
-
-        } catch(Exception $e) {
-            $this->app->contentType('text/html');
-            $this->app->response()->status(500);
-            $this->app->response()->body($e->getMessage());
-            return;
-        }
-
-        if( $username === false || $password === false ) {
-            // Not authenticated
-            $this->app->contentType('text/html');
-            $this->app->response()->status(401);
-            $this->app->response()->body('You must be authenticated to access this resource');
-            return;
-        }
+class SOGoSession extends \Slim\Middleware
+{
+    public function call()
+    {
+        list($username, $password) = $this->_getSOGoCredentials();
 
         $env = $this->app->environment();
         $env['SOGoAccountsManager.credentials.username'] = $username;
@@ -60,87 +40,93 @@ class SOGoSession extends \Slim\Middleware {
     }
 
 
-    /* #################### GET THE SESSION INFORMATIONS ################### */
-    /* ####################   FROM COOKIE AND DATABASE   ################### */
-
     private function _getSOGoCredentials()
     {
+        $cookie = $this->_getSOGoCookie();
+        list($sessionId, $encryptionKey) = $this->_parseSOGoCookie($cookie);
+        $cipher = $this->_getEncryptedSessionDataFromDatabase($sessionId);
+        $clear = $this->_decryptSessionData($cipher, $encryptionKey);
+
+        return explode(':', $clear);
+    }
+
+    private function _getSOGoCookie()
+    {
         if( !isset($_COOKIE['0xHIGHFLYxSOGo']) ) {
-            return array(false, false);
+            throw new UserFriendlyException(401, 'You must be authenticated to access this resource');
+
+        } elseif( !is_string($_COOKIE['0xHIGHFLYxSOGo']) || strlen($_COOKIE['0xHIGHFLYxSOGo']) <= 6 ) {
+            throw new UserFriendlyException(400, 'Invalid authentication cookie');
         }
 
-        list($encryptionKey, $sessionKey) = $this->_readLoginCookie($_COOKIE['0xHIGHFLYxSOGo']);
-        $securedValue = $this->_valueForSessionKey($sessionKey);
-        $value = $this->_valueFromSecuredValue($encryptionKey, $securedValue);
-
-        $ret = explode(':', $value);
-        if( count($ret) !== 2 ) {
-            throw new Exception('incorrect decryption');
-        }
-
-        return $ret;
+        return substr($_COOKIE['0xHIGHFLYxSOGo'], 6);
     }
 
-    private function _readLoginCookie($cookie)
+    private function _parseSOGoCookie($cookie)
     {
-        if( !is_string($cookie) || strlen($cookie) <= 6 ) {
-            throw new Exception('unexpected cookie (cannot read)');
+        $cookieValues = explode(':', base64_decode($cookie, true));
+
+        if( !is_array($cookieValues) || count($cookieValues) !== 2 ) {
+            throw new UserFriendlyException(400, 'Cannot parse authentication cookie');
         }
 
-        $value = substr($cookie, 6);
-        $loginValues = explode(':', base64_decode($value, true));
+        $sessionId = $cookieValues[1];
+        $encryptionKey = base64_decode($cookieValues[0], true);
 
-        if( !is_array($loginValues) || count($loginValues) !== 2 ) {
-            throw new Exception('unexpected cookie (cannot decode)');
-        }
-
-        return $loginValues;
+        return array($sessionId, $encryptionKey);
     }
-    
-    private function _valueForSessionKey($sessionKey)
+
+    private function _getEncryptedSessionDataFromDatabase($sessionId)
     {
-        $value = null;
-        $dbh = new PDO($this->app->config('sogo.db.dsn'),
-                $this->app->config('sogo.db.user'), $this->app->config('sogo.db.password'));
+        $OCSSessionsFolderURL = $this->app->config('sogo')->OCSSessionsFolderURL;
+        $dbInfo = SOGoConfiguration::getDbInfoFromURL($OCSSessionsFolderURL);
+
+        $dbh = new PDO($dbInfo['dsn'], $dbInfo['user'], $dbInfo['password']);
 
         $sql = 'SELECT c_value
-                FROM '.$this->app->config('sogo.db.OCSSessionsFolder').'
+                FROM '.$dbInfo['table'].'
                 WHERE c_id = ?';
-        $args = array($sessionKey);
+        $args = array($sessionId);
 
         $sth = $dbh->prepare($sql);
-        if( $sth->execute($args) && ($result = $sth->fetch(PDO::FETCH_OBJ)) ) {
+        if( $sth->execute($args) && ($result = $sth->fetch()) ) {
             $value = $result->c_value;
             $sth->closeCursor();
             $sth = null;
 
-            $sql = 'UPDATE '.$this->app->config('sogo.db.OCSSessionsFolder').'
-                    SET c_lastseen = ?
-                    WHERE c_id = ?';
-            $args = array(time(), $sessionKey);
+            $this->_updateSessionLastSeenToNowInDatabase($sessionId);
 
-            $sth = $dbh->prepare($sql);
-            $sth->execute($args);
-            $sth->closeCursor();
-            $sth = null;
+            return base64_decode($value, true);
+
+        } else {
+            throw new Exception('Db error: unable to fetch session informations');
         }
-
-        return $value;
     }
 
-    private function _valueFromSecuredValue($encryptionKey, $securedValue)
+    private function _updateSessionLastSeenToNowInDatabase($sessionId)
     {
-        if( empty($encryptionKey) || empty($securedValue) ) {
-            throw new Exception('cannot decrypt');
-        }
+        $OCSSessionsFolderURL = $this->app->config('sogo')->OCSSessionsFolderURL;
+        $dbInfo = SOGoConfiguration::getDbInfoFromURL($OCSSessionsFolderURL);
 
-        $key = base64_decode($encryptionKey, true);
-        $klen = strlen($key);
-        
-        $pass = base64_decode($securedValue);
+        $dbh = new PDO($dbInfo['dsn'], $dbInfo['user'], $dbInfo['password']);
+
+        $sql = 'UPDATE '.$dbInfo['table'].'
+                SET c_lastseen = ?
+                WHERE c_id = ?';
+        $args = array(time(), $sessionId);
+
+        $sth = $dbh->prepare($sql);
+        $sth->execute($args);
+        $sth->closeCursor();
+    }
+
+    private function _decryptSessionData($cipher, $encryptionKey)
+    {
         $clear = '';
+
+        $klen = strlen($encryptionKey);
         for($i=0; $i<$klen; $i++) {
-            $clear .= chr(ord($key[$i]) ^ ord($pass[$i]));
+            $clear .= chr(ord($encryptionKey[$i]) ^ ord($cipher[$i]));
         }
 
         return $clear;
